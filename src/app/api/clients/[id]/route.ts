@@ -2,24 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { Client } from "@/models/Client";
 
-// Define the runtime for Vercel Functions
-export const runtime = 'nodejs'; // Using Node.js runtime for MongoDB compatibility
+// ✅ Tell Vercel you're using Node.js
+export const runtime = 'nodejs';
 
-// Define the params type
-type Params = {
-  params: {
-    id: string;
-  };
-};
-
-// ✅ GET single client by ID
+// --- GET single client by ID
 export async function GET(
   req: NextRequest,
-  { params }: Params
+  context: { params: { id: string } }
 ) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = context.params;
 
     const client = await Client.findById(id);
     if (!client) {
@@ -30,20 +23,20 @@ export async function GET(
   } catch (error) {
     console.error("Error fetching client:", error);
     return NextResponse.json(
-      { error: "Failed to fetch client" },
+      { error: (error as Error).message || "Failed to fetch client" },
       { status: 500 }
     );
   }
 }
 
-// ✅ PUT update a client
+// --- PUT update a client
 export async function PUT(
   req: NextRequest,
-  { params }: Params
+  context: { params: { id: string } }
 ) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = context.params;
 
     const data = await req.json();
     const client = await Client.findByIdAndUpdate(id, data, { new: true });
@@ -55,20 +48,20 @@ export async function PUT(
   } catch (error) {
     console.error("Error updating client:", error);
     return NextResponse.json(
-      { error: "Failed to update client" },
+      { error: (error as Error).message || "Failed to update client" },
       { status: 500 }
     );
   }
 }
 
-// ✅ DELETE a client
+// --- DELETE a client
 export async function DELETE(
   req: NextRequest,
-  { params }: Params
+  context: { params: { id: string } }
 ) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = context.params;
 
     const client = await Client.findByIdAndDelete(id);
     if (!client) {
@@ -79,7 +72,7 @@ export async function DELETE(
   } catch (error) {
     console.error("Error deleting client:", error);
     return NextResponse.json(
-      { error: "Failed to delete client" },
+      { error: (error as Error).message || "Failed to delete client" },
       { status: 500 }
     );
   }
