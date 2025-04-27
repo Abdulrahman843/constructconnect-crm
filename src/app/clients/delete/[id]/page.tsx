@@ -6,11 +6,10 @@ import { useEffect } from "react";
 export default function DeleteClientPage() {
   const router = useRouter();
   const params = useParams();
-
-  const id = params?.id as string; // ✅ safely cast to string (important!)
+  const id = params?.id as string; // ✅ safely cast id to string
 
   useEffect(() => {
-    if (!id) return; // ✅ avoid running if id is undefined
+    if (!id) return; // ✅ Skip if id is missing
 
     const deleteClient = async () => {
       try {
@@ -19,7 +18,7 @@ export default function DeleteClientPage() {
         if (res.ok) {
           router.push("/clients");
         } else {
-          console.error("Failed to delete client");
+          console.error("Failed to delete client:", await res.text());
         }
       } catch (error) {
         console.error("Error deleting client:", error);
@@ -30,8 +29,9 @@ export default function DeleteClientPage() {
   }, [id, router]);
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-semibold text-gray-800">Deleting Client...</h1>
+    <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-gray-100">
+      <h1 className="text-2xl font-bold text-red-600 mb-4">Deleting Client...</h1>
+      <p className="text-gray-600">Please wait while we remove the client from the system.</p>
     </div>
   );
 }

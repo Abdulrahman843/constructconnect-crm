@@ -3,13 +3,11 @@ import { connectDB } from "@/lib/mongodb";
 import { Client } from "@/models/Client";
 
 // ✅ GET single client by ID
-export async function GET(
-  _req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request, context: { params: { id: string } }) {
   await connectDB();
-  const client = await Client.findById(params.id);
+  const { id } = context.params;
 
+  const client = await Client.findById(id);
   if (!client) {
     return NextResponse.json({ error: "Client not found" }, { status: 404 });
   }
@@ -18,14 +16,12 @@ export async function GET(
 }
 
 // ✅ PUT update a client
-export async function PUT(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: Request, context: { params: { id: string } }) {
   await connectDB();
-  const data = await req.json();
-  const client = await Client.findByIdAndUpdate(params.id, data, { new: true });
+  const { id } = context.params;
 
+  const data = await request.json();
+  const client = await Client.findByIdAndUpdate(id, data, { new: true });
   if (!client) {
     return NextResponse.json({ error: "Client not found" }, { status: 404 });
   }
@@ -34,13 +30,11 @@ export async function PUT(
 }
 
 // ✅ DELETE a client
-export async function DELETE(
-  _req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: Request, context: { params: { id: string } }) {
   await connectDB();
-  const client = await Client.findByIdAndDelete(params.id);
+  const { id } = context.params;
 
+  const client = await Client.findByIdAndDelete(id);
   if (!client) {
     return NextResponse.json({ error: "Client not found" }, { status: 404 });
   }

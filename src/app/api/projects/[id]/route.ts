@@ -3,13 +3,11 @@ import { connectDB } from "@/lib/mongodb";
 import { Project } from "@/models/Project";
 
 // ✅ GET single project
-export async function GET(
-  _req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request, context: { params: { id: string } }) {
   await connectDB();
-  const project = await Project.findById(params.id);
+  const { id } = context.params;
 
+  const project = await Project.findById(id);
   if (!project) {
     return NextResponse.json({ error: "Project not found" }, { status: 404 });
   }
@@ -18,14 +16,12 @@ export async function GET(
 }
 
 // ✅ PUT update a project
-export async function PUT(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: Request, context: { params: { id: string } }) {
   await connectDB();
-  const data = await req.json();
-  const project = await Project.findByIdAndUpdate(params.id, data, { new: true });
+  const { id } = context.params;
 
+  const data = await request.json();
+  const project = await Project.findByIdAndUpdate(id, data, { new: true });
   if (!project) {
     return NextResponse.json({ error: "Project not found" }, { status: 404 });
   }
@@ -34,13 +30,11 @@ export async function PUT(
 }
 
 // ✅ DELETE a project
-export async function DELETE(
-  _req: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: Request, context: { params: { id: string } }) {
   await connectDB();
-  const project = await Project.findByIdAndDelete(params.id);
+  const { id } = context.params;
 
+  const project = await Project.findByIdAndDelete(id);
   if (!project) {
     return NextResponse.json({ error: "Project not found" }, { status: 404 });
   }
