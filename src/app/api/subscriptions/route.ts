@@ -3,9 +3,7 @@ import Stripe from "stripe";
 import mongoose from "mongoose";
 
 // Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2022-11-15",
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI!);
