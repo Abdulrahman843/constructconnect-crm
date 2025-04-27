@@ -3,8 +3,15 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+type Client = {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+};
+
 export default function ClientsPage() {
-  const [clients, setClients] = useState<[]>([]);
+  const [clients, setClients] = useState<Client[]>([]); // ✅ correct type
   const [search, setSearch] = useState("");
 
   useEffect(() => {
