@@ -1,8 +1,10 @@
 import { connectDB } from "@/lib/mongodb";
 import { Chat } from "@/models/Chat";
+import { Types } from "mongoose";
 
 export const runtime = 'nodejs'; // ✅ for MongoDB compatibility
 
+// Define the type for our UI
 type ChatType = {
   _id: string;
   userMessage: string;
@@ -17,12 +19,23 @@ export default async function AdminChatsPage() {
   const rawChats = await Chat.find().sort({ createdAt: -1 }).lean();
   
   // Transform the documents to match our ChatType interface
-  const chats: ChatType[] = rawChats.map(chat => ({
-    _id: chat._id.toString(), // Convert ObjectId to string
-    userMessage: chat.userMessage || "",
-    botReply: chat.botReply || "",
-    createdAt: chat.createdAt ? new Date(chat.createdAt).toISOString() : new Date().toISOString()
-  }));
+  const chats: ChatType[] = rawChats.map(chat => {
+    // Ensure _id is handled correctly
+    const id = chat._id instanceof Types.ObjectId 
+      ? chat._id.toString() 
+      : typeof chat._id === 'object' && chat._id !== null && 'toString' in chat._id
+        ? (chat._id as { toString(): string }).toString()
+        : String(chat._id);
+        
+    return {
+      _id: id,
+      userMessage: typeof chat.userMessage === 'string' ? chat.userMessage : "",
+      botReply: typeof chat.botReply === 'string' ? chat.botReply : "",
+      createdAt: chat.createdAt 
+        ? new Date(chat.createdAt as Date | string | number).toISOString() 
+        : new Date().toISOString()
+    };
+  });
 
   return (
     <div className="py-8">
