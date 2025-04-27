@@ -13,7 +13,16 @@ type ChatType = {
 export default async function AdminChatsPage() {
   await connectDB();
 
-  const chats = (await Chat.find().sort({ createdAt: -1 }).lean()) as ChatType[];
+  // Get the raw documents from MongoDB
+  const rawChats = await Chat.find().sort({ createdAt: -1 }).lean();
+  
+  // Transform the documents to match our ChatType interface
+  const chats: ChatType[] = rawChats.map(chat => ({
+    _id: chat._id.toString(), // Convert ObjectId to string
+    userMessage: chat.userMessage || "",
+    botReply: chat.botReply || "",
+    createdAt: chat.createdAt ? new Date(chat.createdAt).toISOString() : new Date().toISOString()
+  }));
 
   return (
     <div className="py-8">
@@ -29,13 +38,21 @@ export default async function AdminChatsPage() {
             </tr>
           </thead>
           <tbody>
-            {chats.map((chat) => (
-              <tr key={chat._id} className="border-t">
-                <td className="p-3">{chat.userMessage}</td>
-                <td className="p-3">{chat.botReply}</td>
-                <td className="p-3">{new Date(chat.createdAt).toLocaleString()}</td>
+            {chats.length > 0 ? (
+              chats.map((chat) => (
+                <tr key={chat._id} className="border-t">
+                  <td className="p-3">{chat.userMessage}</td>
+                  <td className="p-3">{chat.botReply}</td>
+                  <td className="p-3">{new Date(chat.createdAt).toLocaleString()}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={3} className="p-3 text-center text-gray-500">
+                  No chat history found
+                </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
