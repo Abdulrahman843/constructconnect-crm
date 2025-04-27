@@ -5,11 +5,8 @@ import { Project } from "@/models/Project";
 // Define the runtime for Vercel Functions
 export const runtime = 'nodejs'; // Using Node.js runtime for MongoDB compatibility
 
-// ✅ GET single project
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+// ✅ GET single project by ID
+export async function GET(req, { params }) {
   try {
     await connectDB();
     const { id } = params;
@@ -30,15 +27,12 @@ export async function GET(
 }
 
 // ✅ PUT update a project
-export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(req, { params }) {
   try {
     await connectDB();
     const { id } = params;
 
-    const data = await request.json();
+    const data = await req.json();
     const project = await Project.findByIdAndUpdate(id, data, { new: true });
     if (!project) {
       return NextResponse.json({ error: "Project not found" }, { status: 404 });
@@ -55,10 +49,7 @@ export async function PUT(
 }
 
 // ✅ DELETE a project
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(req, { params }) {
   try {
     await connectDB();
     const { id } = params;
