@@ -8,11 +8,11 @@ export const runtime = 'nodejs'; // Using Node.js runtime for MongoDB compatibil
 // ✅ GET single client by ID
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = context.params;
 
     const client = await Client.findById(id);
     if (!client) {
@@ -32,11 +32,11 @@ export async function GET(
 // ✅ PUT update a client
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = context.params;
 
     const data = await request.json();
     const client = await Client.findByIdAndUpdate(id, data, { new: true });
@@ -57,11 +57,11 @@ export async function PUT(
 // ✅ DELETE a client
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = context.params;
 
     const client = await Client.findByIdAndDelete(id);
     if (!client) {
