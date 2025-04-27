@@ -6,7 +6,7 @@ if (!MONGODB_URI) {
   throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
 }
 
-// ✅ Patch to fix TypeScript correctly
+// ✅ Patch for TypeScript
 declare global {
   // eslint-disable-next-line no-var
   var mongooseCache: {
@@ -15,17 +15,18 @@ declare global {
   } | undefined;
 }
 
-let cached = global.mongooseCache;
-
-if (!cached) {
-  cached = {
-    conn: null,
-    promise: null,
-  };
-  global.mongooseCache = cached; // ✅ Important: assign back
-}
-
 export async function connectDB() {
+  // ✅ Move cached inside function
+  let cached = global.mongooseCache;
+
+  if (!cached) {
+    cached = {
+      conn: null,
+      promise: null,
+    };
+    global.mongooseCache = cached;
+  }
+
   if (cached.conn) {
     return cached.conn;
   }
