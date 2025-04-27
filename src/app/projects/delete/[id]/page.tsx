@@ -8,6 +8,7 @@ export default function DeleteProjectPage() {
   const router = useRouter();
   const params = useParams();
   const id = params?.id as string;
+
   const [confirm, setConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -39,29 +40,36 @@ export default function DeleteProjectPage() {
 
   if (isDeleting) {
     return (
-      <div className="p-8 text-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
         <h1 className="text-2xl font-bold text-red-600">Deleting project...</h1>
       </div>
     );
   }
 
   return (
-    <div className="max-w-md mx-auto p-8 text-center">
-      <h1 className="text-2xl font-bold mb-4 text-red-600">Confirm Delete</h1>
-      <p className="mb-6">Are you sure you want to delete this project? This action cannot be undone.</p>
-      <div className="flex gap-4 justify-center">
-        <button
-          onClick={() => setConfirm(true)}
-          className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold"
-        >
-          Yes, Delete
-        </button>
-        <button
-          onClick={() => router.push("/projects")}
-          className="bg-gray-300 hover:bg-gray-400 px-6 py-3 rounded-lg font-semibold"
-        >
-          Cancel
-        </button>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md text-center space-y-6">
+        <h1 className="text-2xl font-bold text-red-600">Confirm Delete</h1>
+        <p className="text-gray-700">
+          Are you sure you want to delete this project? <br />
+          This action cannot be undone.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <button
+            onClick={() => setConfirm(true)}
+            className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-md font-semibold transition-all duration-300"
+          >
+            Yes, Delete
+          </button>
+
+          <button
+            onClick={() => router.push("/projects")}
+            className="w-full sm:w-auto bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-3 rounded-md font-semibold transition-all duration-300"
+          >
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   );

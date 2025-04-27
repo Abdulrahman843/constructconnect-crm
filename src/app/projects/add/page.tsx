@@ -38,47 +38,65 @@ export default function AddProjectPage() {
   };
 
   return (
-    <div className="max-w-lg mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-6 text-blue-700">Add Project</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          placeholder="Project Name"
-          className="border w-full p-2"
-          required
-          value={form.name}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setForm({ ...form, name: e.target.value })
-          }
-        />
-        <textarea
-          placeholder="Description"
-          className="border w-full p-2"
-          required
-          value={form.description}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-            setForm({ ...form, description: e.target.value })
-          }
-        ></textarea>
-        <input
-          type="text"
-          placeholder="Client Name"
-          className="border w-full p-2"
-          required
-          value={form.clientName}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setForm({ ...form, clientName: e.target.value })
-          }
-        />
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md space-y-6">
+        <h1 className="text-center text-3xl font-extrabold text-blue-700">
+          Add Project
+        </h1>
 
-        <button
-          type="submit"
-          className={`w-full py-2 rounded ${loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"} text-white`}
-          disabled={loading}
-        >
-          {loading ? "Saving..." : "Save Project"}
-        </button>
-      </form>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <input
+              type="text"
+              placeholder="Project Name"
+              required
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 p-3 sm:text-sm"
+              value={form.name}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setForm({ ...form, name: e.target.value })
+              }
+            />
+          </div>
+
+          <div>
+            <textarea
+              placeholder="Description"
+              required
+              rows={4}
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 p-3 sm:text-sm resize-none"
+              value={form.description}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                setForm({ ...form, description: e.target.value })
+              }
+            ></textarea>
+          </div>
+
+          <div>
+            <input
+              type="text"
+              placeholder="Client Name"
+              required
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 p-3 sm:text-sm"
+              value={form.clientName}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setForm({ ...form, clientName: e.target.value })
+              }
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 transition-all duration-300"
+            } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
+          >
+            {loading ? "Saving..." : "Save Project"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

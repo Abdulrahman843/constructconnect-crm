@@ -23,45 +23,71 @@ export default function AddClientPage() {
   };
 
   return (
-    <div className="max-w-lg mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-6 text-blue-700">Add Client</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          placeholder="Full Name"
-          className="border w-full p-2"
-          required
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          className="border w-full p-2"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-        />
-        <input
-          type="text"
-          placeholder="Phone"
-          className="border w-full p-2"
-          value={form.phone}
-          onChange={(e) => setForm({ ...form, phone: e.target.value })}
-        />
-        <input
-          type="text"
-          placeholder="Company"
-          className="border w-full p-2"
-          value={form.company}
-          onChange={(e) => setForm({ ...form, company: e.target.value })}
-        />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          Save Client
-        </button>
-      </form>
+    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded shadow-md">
+        <div>
+          <h1 className="text-center text-3xl font-extrabold text-blue-700">
+            Add New Client
+          </h1>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            Fill in the details below
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="rounded-md shadow-sm -space-y-px">
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder="Full Name"
+                required
+                className="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+              />
+            </div>
+
+            <div className="mb-4">
+              <input
+                type="email"
+                placeholder="Email"
+                className="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+              />
+            </div>
+
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder="Phone"
+                className="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              />
+            </div>
+
+            <div className="mb-6">
+              <input
+                type="text"
+                placeholder="Company"
+                className="appearance-none rounded relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                value={form.company}
+                onChange={(e) => setForm({ ...form, company: e.target.value })}
+              />
+            </div>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded bg-blue-600 hover:bg-blue-700 text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300"
+            >
+              Save Client
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

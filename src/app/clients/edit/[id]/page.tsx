@@ -13,7 +13,7 @@ interface Client {
 export default function EditClientPage() {
   const router = useRouter();
   const params = useParams();
-  const id = params?.id as string; // ✅ Safely extract id
+  const id = params?.id as string;
 
   const [form, setForm] = useState<Client>({
     name: "",
@@ -23,7 +23,7 @@ export default function EditClientPage() {
   });
 
   useEffect(() => {
-    if (!id) return; // ✅ Guard if id is missing
+    if (!id) return;
 
     const fetchClient = async () => {
       try {
@@ -59,45 +59,60 @@ export default function EditClientPage() {
   };
 
   return (
-    <div className="max-w-lg mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-6 text-blue-700">Edit Client</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          placeholder="Full Name"
-          className="border w-full p-2"
-          required
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          className="border w-full p-2"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-        />
-        <input
-          type="text"
-          placeholder="Phone"
-          className="border w-full p-2"
-          value={form.phone}
-          onChange={(e) => setForm({ ...form, phone: e.target.value })}
-        />
-        <input
-          type="text"
-          placeholder="Company"
-          className="border w-full p-2"
-          value={form.company}
-          onChange={(e) => setForm({ ...form, company: e.target.value })}
-        />
-        <button
-          type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg w-full transition"
-        >
-          Update Client
-        </button>
-      </form>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
+        <h1 className="text-center text-3xl font-bold text-blue-700 mb-6">Edit Client</h1>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <input
+              type="text"
+              placeholder="Full Name"
+              required
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 p-3 sm:text-sm"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
+          </div>
+
+          <div>
+            <input
+              type="email"
+              placeholder="Email"
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 p-3 sm:text-sm"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+            />
+          </div>
+
+          <div>
+            <input
+              type="text"
+              placeholder="Phone"
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 p-3 sm:text-sm"
+              value={form.phone}
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+            />
+          </div>
+
+          <div>
+            <input
+              type="text"
+              placeholder="Company"
+              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 p-3 sm:text-sm"
+              value={form.company}
+              onChange={(e) => setForm({ ...form, company: e.target.value })}
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Update Client
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
