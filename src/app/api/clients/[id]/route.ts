@@ -1,18 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { Client } from "@/models/Client";
+import type { RouteHandlerContext } from "next/dist/server/future/route-modules/types"; // 👈 important
 
 export const runtime = "nodejs";
 
 // --- GET single client by ID
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteHandlerContext
 ) {
   try {
     await connectDB();
-    const client = await Client.findById(params.id);
+    const { id } = context.params;
 
+    const client = await Client.findById(id);
     if (!client) {
       return NextResponse.json({ error: "Client not found" }, { status: 404 });
     }
@@ -30,12 +32,14 @@ export async function GET(
 // --- PUT update a client
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteHandlerContext
 ) {
   try {
     await connectDB();
+    const { id } = context.params;
+
     const data = await req.json();
-    const client = await Client.findByIdAndUpdate(params.id, data, { new: true });
+    const client = await Client.findByIdAndUpdate(id, data, { new: true });
 
     if (!client) {
       return NextResponse.json({ error: "Client not found" }, { status: 404 });
@@ -54,12 +58,13 @@ export async function PUT(
 // --- DELETE a client
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteHandlerContext
 ) {
   try {
     await connectDB();
-    const client = await Client.findByIdAndDelete(params.id);
+    const { id } = context.params;
 
+    const client = await Client.findByIdAndDelete(id);
     if (!client) {
       return NextResponse.json({ error: "Client not found" }, { status: 404 });
     }
