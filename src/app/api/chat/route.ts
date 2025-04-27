@@ -1,20 +1,22 @@
 import { NextResponse } from "next/server";
-import OpenAI from "openai"; // ✅ new import
+import OpenAI from "openai";
 import { connectDB } from "@/lib/mongodb";
-import { Chat } from "@/models/Chat"; // ✅ your model
+import { Chat } from "@/models/Chat";
+
+export const runtime = 'nodejs'; // ✅ (for Vercel functions!)
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY, // ✅ use your environment variable
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 export async function POST(req: Request) {
-  const { message } = await req.json();
-
   try {
-    await connectDB(); // ✅ connect MongoDB
+    const { message } = await req.json();
+
+    await connectDB();
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // ✅
+      model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
@@ -30,7 +32,6 @@ export async function POST(req: Request) {
 
     const reply = completion.choices[0].message?.content || "No reply";
 
-    // ✅ Save conversation to MongoDB
     await Chat.create({
       userMessage: message,
       botReply: reply,
@@ -39,6 +40,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ reply });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: error.message || "Something went wrong" }, { status: 500 });
+
+    // 🛠 Fix: safely cast `error` to Error
+    const err = error as Error;
+
+    return NextResponse.json(
+      { error: err.message || "Something went wrong" },
+      { status: 500 }
+    );
   }
 }
