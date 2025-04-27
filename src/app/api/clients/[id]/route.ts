@@ -1,12 +1,22 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { Client } from "@/models/Client";
 
 // Define the runtime for Vercel Functions
 export const runtime = 'nodejs'; // Using Node.js runtime for MongoDB compatibility
 
+// Define the params type
+type Params = {
+  params: {
+    id: string;
+  };
+};
+
 // ✅ GET single client by ID
-export async function GET(req, { params }) {
+export async function GET(
+  req: NextRequest,
+  { params }: Params
+) {
   try {
     await connectDB();
     const { id } = params;
@@ -27,7 +37,10 @@ export async function GET(req, { params }) {
 }
 
 // ✅ PUT update a client
-export async function PUT(req, { params }) {
+export async function PUT(
+  req: NextRequest,
+  { params }: Params
+) {
   try {
     await connectDB();
     const { id } = params;
@@ -49,7 +62,10 @@ export async function PUT(req, { params }) {
 }
 
 // ✅ DELETE a client
-export async function DELETE(req, { params }) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: Params
+) {
   try {
     await connectDB();
     const { id } = params;
