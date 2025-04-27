@@ -7,21 +7,24 @@ export function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [conversation, setConversation] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const handleSend = async () => {
     if (!message.trim()) return;
-  
+
     const userMessage = message;
-    setConversation((prev) => [...prev, `You: ${userMessage}`]);
+    const newConversation = [...conversation, `You: ${userMessage}`];
+    setConversation(newConversation);
     setMessage("");
-  
+    setLoading(true);
+
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage }),
+        body: JSON.stringify({ conversation: newConversation }), // ✅ Send entire chat history
       });
-  
+
       const data = await res.json();
       if (data.reply) {
         setConversation((prev) => [...prev, `Bot: ${data.reply}`]);
@@ -30,10 +33,12 @@ export function ChatBot() {
       }
     } catch (error) {
       console.error(error);
-      setConversation((prev) => [...prev, "Bot: Error contacting the server."]);
+      setConversation((prev) => [...prev, "Bot: Error contacting server."]);
+    } finally {
+      setLoading(false);
     }
   };
-  
+
   return (
     <>
       {/* Floating Button */}
@@ -46,7 +51,7 @@ export function ChatBot() {
 
       {/* Chatbot Modal */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 bg-white w-80 h-96 shadow-lg rounded-lg flex flex-col overflow-hidden">
+        <div className="fixed bottom-24 right-6 bg-white w-80 h-96 shadow-lg rounded-lg flex flex-col overflow-hidden z-50">
           <div className="bg-blue-600 text-white p-4 flex justify-between items-center">
             <h2 className="text-lg font-bold">How can I help you?</h2>
             <button onClick={() => setIsOpen(false)} className="text-white hover:text-gray-200 text-2xl">&times;</button>
@@ -58,6 +63,7 @@ export function ChatBot() {
                 {line}
               </p>
             ))}
+            {loading && <p className="text-blue-500">Bot is typing...</p>}
           </div>
 
           <div className="p-4 border-t flex">
@@ -65,12 +71,19 @@ export function ChatBot() {
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
               placeholder="Type a message..."
               className="flex-1 border rounded-l-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
               onClick={handleSend}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-md text-sm"
+              disabled={loading}
             >
               Send
             </button>
