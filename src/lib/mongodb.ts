@@ -6,19 +6,23 @@ if (!MONGODB_URI) {
   throw new Error("Please define the MONGODB_URI environment variable inside .env.local");
 }
 
-// ✅ Add this small patch to fix TypeScript complaints
+// ✅ Patch to fix TypeScript correctly
 declare global {
   // eslint-disable-next-line no-var
-  var mongoose: {
+  var mongooseCache: {
     conn: typeof mongoose | null;
     promise: Promise<typeof mongoose> | null;
   } | undefined;
 }
 
-let cached = global.mongoose;
+let cached = global.mongooseCache;
 
 if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+  cached = {
+    conn: null,
+    promise: null,
+  };
+  global.mongooseCache = cached; // ✅ Important: assign back
 }
 
 export async function connectDB() {
@@ -28,7 +32,7 @@ export async function connectDB() {
 
   if (!cached.promise) {
     cached.promise = mongoose.connect(MONGODB_URI, {
-      dbName: "constructconnect-crm", // 👈 optional but cleaner
+      dbName: "constructconnect-crm",
     }).then((mongoose) => {
       console.log("✅ [MongoDB] Connected successfully");
       return mongoose;
