@@ -8,7 +8,7 @@ export const runtime = 'nodejs';
 // --- GET single client by ID
 export async function GET(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Record<string, string> }
 ) {
   try {
     await connectDB();
@@ -32,7 +32,7 @@ export async function GET(
 // --- PUT update a client
 export async function PUT(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Record<string, string> }
 ) {
   try {
     await connectDB();
@@ -57,7 +57,7 @@ export async function PUT(
 // --- DELETE a client
 export async function DELETE(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Record<string, string> }
 ) {
   try {
     await connectDB();
