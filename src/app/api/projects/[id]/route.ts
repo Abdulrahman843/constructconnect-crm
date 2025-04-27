@@ -2,42 +2,78 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { Project } from "@/models/Project";
 
+// Define the runtime for Vercel Functions
+export const runtime = 'nodejs'; // Using Node.js runtime for MongoDB compatibility
+
 // ✅ GET single project
-export async function GET(request: Request, context: { params: { id: string } }) {
-  await connectDB();
-  const { id } = context.params;
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await connectDB();
+    const { id } = params;
 
-  const project = await Project.findById(id);
-  if (!project) {
-    return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    const project = await Project.findById(id);
+    if (!project) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(project);
+  } catch (error) {
+    console.error("Error fetching project:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch project" },
+      { status: 500 }
+    );
   }
-
-  return NextResponse.json(project);
 }
 
 // ✅ PUT update a project
-export async function PUT(request: Request, context: { params: { id: string } }) {
-  await connectDB();
-  const { id } = context.params;
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await connectDB();
+    const { id } = params;
 
-  const data = await request.json();
-  const project = await Project.findByIdAndUpdate(id, data, { new: true });
-  if (!project) {
-    return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    const data = await request.json();
+    const project = await Project.findByIdAndUpdate(id, data, { new: true });
+    if (!project) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(project);
+  } catch (error) {
+    console.error("Error updating project:", error);
+    return NextResponse.json(
+      { error: "Failed to update project" },
+      { status: 500 }
+    );
   }
-
-  return NextResponse.json(project);
 }
 
 // ✅ DELETE a project
-export async function DELETE(request: Request, context: { params: { id: string } }) {
-  await connectDB();
-  const { id } = context.params;
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await connectDB();
+    const { id } = params;
 
-  const project = await Project.findByIdAndDelete(id);
-  if (!project) {
-    return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    const project = await Project.findByIdAndDelete(id);
+    if (!project) {
+      return NextResponse.json({ error: "Project not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Project deleted" });
+  } catch (error) {
+    console.error("Error deleting project:", error);
+    return NextResponse.json(
+      { error: "Failed to delete project" },
+      { status: 500 }
+    );
   }
-
-  return NextResponse.json({ message: "Project deleted" });
 }

@@ -2,42 +2,78 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { Client } from "@/models/Client";
 
+// Define the runtime for Vercel Functions
+export const runtime = 'nodejs'; // Using Node.js runtime for MongoDB compatibility
+
 // ✅ GET single client by ID
-export async function GET(request: Request, context: { params: { id: string } }) {
-  await connectDB();
-  const { id } = context.params;
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await connectDB();
+    const { id } = params;
 
-  const client = await Client.findById(id);
-  if (!client) {
-    return NextResponse.json({ error: "Client not found" }, { status: 404 });
+    const client = await Client.findById(id);
+    if (!client) {
+      return NextResponse.json({ error: "Client not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(client);
+  } catch (error) {
+    console.error("Error fetching client:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch client" },
+      { status: 500 }
+    );
   }
-
-  return NextResponse.json(client);
 }
 
 // ✅ PUT update a client
-export async function PUT(request: Request, context: { params: { id: string } }) {
-  await connectDB();
-  const { id } = context.params;
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await connectDB();
+    const { id } = params;
 
-  const data = await request.json();
-  const client = await Client.findByIdAndUpdate(id, data, { new: true });
-  if (!client) {
-    return NextResponse.json({ error: "Client not found" }, { status: 404 });
+    const data = await request.json();
+    const client = await Client.findByIdAndUpdate(id, data, { new: true });
+    if (!client) {
+      return NextResponse.json({ error: "Client not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(client);
+  } catch (error) {
+    console.error("Error updating client:", error);
+    return NextResponse.json(
+      { error: "Failed to update client" },
+      { status: 500 }
+    );
   }
-
-  return NextResponse.json(client);
 }
 
 // ✅ DELETE a client
-export async function DELETE(request: Request, context: { params: { id: string } }) {
-  await connectDB();
-  const { id } = context.params;
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await connectDB();
+    const { id } = params;
 
-  const client = await Client.findByIdAndDelete(id);
-  if (!client) {
-    return NextResponse.json({ error: "Client not found" }, { status: 404 });
+    const client = await Client.findByIdAndDelete(id);
+    if (!client) {
+      return NextResponse.json({ error: "Client not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Client deleted" });
+  } catch (error) {
+    console.error("Error deleting client:", error);
+    return NextResponse.json(
+      { error: "Failed to delete client" },
+      { status: 500 }
+    );
   }
-
-  return NextResponse.json({ message: "Client deleted" });
 }
