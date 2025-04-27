@@ -6,13 +6,10 @@ import { Client } from "@/models/Client";
 export const runtime = 'nodejs'; // Using Node.js runtime for MongoDB compatibility
 
 // ✅ GET single client by ID
-export async function GET(
-  request: Request,
-  context: { params: { id: string } }
-) {
+export async function GET(req, { params }) {
   try {
     await connectDB();
-    const { id } = context.params;
+    const { id } = params;
 
     const client = await Client.findById(id);
     if (!client) {
@@ -30,15 +27,12 @@ export async function GET(
 }
 
 // ✅ PUT update a client
-export async function PUT(
-  request: Request,
-  context: { params: { id: string } }
-) {
+export async function PUT(req, { params }) {
   try {
     await connectDB();
-    const { id } = context.params;
+    const { id } = params;
 
-    const data = await request.json();
+    const data = await req.json();
     const client = await Client.findByIdAndUpdate(id, data, { new: true });
     if (!client) {
       return NextResponse.json({ error: "Client not found" }, { status: 404 });
@@ -55,13 +49,10 @@ export async function PUT(
 }
 
 // ✅ DELETE a client
-export async function DELETE(
-  request: Request,
-  context: { params: { id: string } }
-) {
+export async function DELETE(req, { params }) {
   try {
     await connectDB();
-    const { id } = context.params;
+    const { id } = params;
 
     const client = await Client.findByIdAndDelete(id);
     if (!client) {
