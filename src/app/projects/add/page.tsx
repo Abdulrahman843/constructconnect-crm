@@ -2,16 +2,21 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify"; // ✅ Add this
+import { toast } from "react-toastify";
 
 export default function AddProjectPage() {
   const router = useRouter();
-  const [form, setForm] = useState({ name: "", description: "", clientName: "", status: "Active" });
-  const [loading, setLoading] = useState(false); // ✅ Track loading
+  const [form, setForm] = useState({
+    name: "",
+    description: "",
+    clientName: "",
+    status: "Active",
+  });
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true); // ✅ Start loading
+    setLoading(true);
     try {
       const res = await fetch("/api/projects", {
         method: "POST",
@@ -28,7 +33,7 @@ export default function AddProjectPage() {
     } catch {
       toast.error("Something went wrong.");
     } finally {
-      setLoading(false); // ✅ Stop loading
+      setLoading(false);
     }
   };
 
@@ -42,14 +47,18 @@ export default function AddProjectPage() {
           className="border w-full p-2"
           required
           value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setForm({ ...form, name: e.target.value })
+          }
         />
         <textarea
           placeholder="Description"
           className="border w-full p-2"
           required
           value={form.description}
-          onChange={(e) => setForm({ ...form, description: e.target.value })}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+            setForm({ ...form, description: e.target.value })
+          }
         ></textarea>
         <input
           type="text"
@@ -57,7 +66,9 @@ export default function AddProjectPage() {
           className="border w-full p-2"
           required
           value={form.clientName}
-          onChange={(e) => setForm({ ...form, clientName: e.target.value })}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setForm({ ...form, clientName: e.target.value })
+          }
         />
 
         <button
