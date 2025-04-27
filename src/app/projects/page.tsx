@@ -3,8 +3,16 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+// ✅ Define a proper Project type
+interface Project {
+  _id: string;
+  name: string;
+  clientName: string;
+  status: string;
+}
+
 export default function ProjectsPage() {
-  const [projects, setProjects] = useState<[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]); // ✅ Correct the type
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -55,8 +63,12 @@ export default function ProjectsPage() {
                 <td className="p-3">{project.clientName}</td>
                 <td className="p-3">{project.status}</td>
                 <td className="p-3 flex gap-2">
-                  <Link href={`/projects/edit/${project._id}`} className="text-blue-600 underline">Edit</Link>
-                  <Link href={`/projects/delete/${project._id}`} className="text-red-600 underline">Delete</Link>
+                  <Link href={`/projects/edit/${project._id}`} className="text-blue-600 underline">
+                    Edit
+                  </Link>
+                  <Link href={`/projects/delete/${project._id}`} className="text-red-600 underline">
+                    Delete
+                  </Link>
                 </td>
               </tr>
             ))}
